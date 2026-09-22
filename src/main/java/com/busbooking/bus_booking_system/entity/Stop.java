@@ -5,21 +5,18 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Bus {
+public class Stop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;               // ex: "BUS-12"
-    private String registrationNumber;
-    private Integer capacity;
-    private Boolean active = true;
-
+    private String name;
     private Double latitude;
     private Double longitude;
+    private Integer sequenceOrder;
 
     @ManyToOne
     @JoinColumn(name = "route_id")
-    private Route route;               // itinéraire actuellement affecté (nullable si au dépôt)
+    private Route route;
 }

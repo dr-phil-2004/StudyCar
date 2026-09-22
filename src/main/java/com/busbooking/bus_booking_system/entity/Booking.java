@@ -18,11 +18,12 @@ public class Booking {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "bus_id")
-    private Bus bus;
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
 
     private LocalDateTime bookingTime;
-    private String status; // e.g., "CONFIRMED", "CANCELLED"
+    private LocalDateTime holdExpiresAt;   // nouveau : pour le hold temporaire (voir cas limite 200 étudiants)
+    private String status; // "HELD", "CONFIRMED", "CANCELLED", "EXPIRED"
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<Passenger> passengers;
