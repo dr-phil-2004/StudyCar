@@ -1,0 +1,8 @@
+# robots.txt for Bus Booking System
+# Learn more: https://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+Allow: /
+
+# Optional: If you host a sitemap.xml, include its public URL here:
+# Sitemap: https://yourdomain.com/sitemap.xml

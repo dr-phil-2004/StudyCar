@@ -1,0 +1,63 @@
+/* =========================================
+   GLOBAL RESET + FONT SMOOTHING
+========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background-color: var(--bg, #f8f9fa);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #0f172a;
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+/* Remove CRA code font styling from entire app except <code> blocks */
+code {
+  font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* =========================================
+   SCROLL-SMOOTHING
+========================================= */
+html {
+  scroll-behavior: smooth;
+}
+
+/* =========================================
+   BASE UTILITIES
+========================================= */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* =========================================
+   GLOBAL FOCUS ACCESSIBILITY
+========================================= */
+*:focus-visible {
+  outline: 3px solid rgba(36,107,255,0.35);
+  outline-offset: 3px;
+  border-radius: 4px;
+}

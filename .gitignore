@@ -1,0 +1,32 @@
+# IntelliJ IDEA files
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Maven build output
+target/
+
+# VS Code files
+.vscode/
+
+# Eclipse/STS files
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# NetBeans files
+/nbproject/private/
+/dist/
+
+# macOS system files
+.DS_Store
+
+# Log files
+*.log
+
+# Environment files
+.env

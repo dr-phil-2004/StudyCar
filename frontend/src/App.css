@@ -1,0 +1,172 @@
+/* ================================
+   GLOBAL THEME & BASE STYLES
+================================ */
+:root {
+  --primary: #246bff;         /* modern blue */
+  --primary-hover: #1a54d9;
+  --bg: #f8f9fa;
+  --radius: 12px;
+  --card-radius: 15px;
+  --shadow: 0 10px 30px rgba(16,24,40,0.06);
+  --transition: 180ms ease;
+  --font: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--bg);
+  margin: 0;
+  padding: 0;
+  color: #0f172a;
+}
+
+/* ======================================
+   CARDS
+====================================== */
+.card {
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+  border: 0 !important;
+}
+
+/* For modern components that use Booking / Profile style */
+.bg-body {
+  background-color: #ffffff !important;
+}
+
+/* ======================================
+   BUTTONS
+====================================== */
+.btn-primary {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  transition: background-color var(--transition), box-shadow var(--transition),
+              transform var(--transition);
+  color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(36,107,255,0.2);
+}
+
+.btn-outline-primary {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* ======================================
+   FORM CONTROLS
+====================================== */
+.form-control {
+  border-radius: var(--radius);
+  padding: 0.75rem 0.9rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.15rem rgba(36,107,255,0.25) !important;
+}
+
+/* ======================================
+   TYPOGRAPHY
+====================================== */
+h1, h2, h3, h4, h5 {
+  font-weight: 700;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+/* ======================================
+   ALERTS
+====================================== */
+.alert {
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+/* ======================================
+   NAVBAR (matches updated Navbar.js)
+====================================== */
+.custom-navbar {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+/* Animated underline effect */
+.nav-link-modern {
+  color: #334155 !important;
+  font-weight: 500;
+  position: relative;
+  transition: color var(--transition);
+}
+
+.nav-link-modern:hover {
+  color: var(--primary) !important;
+}
+
+.nav-link-modern::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+
+.nav-link-modern:hover::after {
+  transform: scaleX(1);
+}
+
+/* ======================================
+   WELCOME / HERO SECTION (optional)
+====================================== */
+.welcome-container {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ======================================
+   ACCESSIBILITY / FOCUS STYLES
+====================================== */
+*:focus-visible {
+  outline: 3px solid rgba(36,107,255,0.35);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ======================================
+   TABLE IMPROVEMENTS (Profile, History)
+====================================== */
+.table-hover tbody tr:hover {
+  background-color: rgba(36,107,255,0.05);
+}
+
+/* ======================================
+   SMALL UTILITIES
+====================================== */
+.shadow-soft {
+  box-shadow: var(--shadow);
+}
+
+.rounded-xl {
+  border-radius: 20px !important;
+}
