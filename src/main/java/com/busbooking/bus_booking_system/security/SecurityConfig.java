@@ -3,6 +3,7 @@ package com.busbooking.bus_booking_system.security;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,7 +39,13 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/booking", "/index.html", "/static/**", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/ws-transit/**").permitAll()
                         .requestMatchers("/register.html", "/profile.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/routes/**", "/api/trips/**", "/api/buses/**",
+                                "/api/recommendations/**").permitAll()
+                        .requestMatchers("/api/analytics/**").permitAll()
+                        .requestMatchers("/api/optimization/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )

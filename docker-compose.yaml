@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    container_name: bus-transport-db
+    environment:
+      POSTGRES_DB: bus_transport
+      POSTGRES_USER: bus_user
+      POSTGRES_PASSWORD: bus_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - bus_pg_data:/var/lib/postgresql/data
+
+volumes:
+  bus_pg_data:

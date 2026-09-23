@@ -18,12 +18,8 @@ public class BusController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Bus>> getBuses(@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
-        if (from != null && to != null) {
-            return ResponseEntity.ok(busService.findBuses(from, to));
-        } else {
-            return ResponseEntity.ok(busService.findAllBuses());
-        }
+    public ResponseEntity<List<Bus>> getBuses() {
+        return ResponseEntity.ok(busService.findAllBuses());
     }
 
     @GetMapping("/{id}")

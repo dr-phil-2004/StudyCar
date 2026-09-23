@@ -18,5 +18,6 @@ public class Stop {
 
     @ManyToOne
     @JoinColumn(name = "route_id")
+    @com.fasterxml.jackson.annotation.JsonBackReference
     private Route route;
 }

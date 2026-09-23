@@ -21,5 +21,6 @@ public class Route {
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sequenceOrder ASC")
+    @com.fasterxml.jackson.annotation.JsonManagedReference
     private List<Stop> stops;
 }

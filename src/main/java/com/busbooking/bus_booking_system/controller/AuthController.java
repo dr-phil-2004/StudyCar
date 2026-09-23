@@ -3,8 +3,13 @@ package com.busbooking.bus_booking_system.controller;
 import com.busbooking.bus_booking_system.entity.User;
 import com.busbooking.bus_booking_system.repository.UserRepository;
 import com.busbooking.bus_booking_system.security.JwtUtil;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,46 +34,60 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        if (userRepository.findByName(user.getName()).isPresent()) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        String name = request.name().trim();
+        String email = request.email().trim().toLowerCase();
+
+        if (userRepository.findByName(name).isPresent()) {
             return ResponseEntity.badRequest().body("Name already exists");
         }
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole("ROLE_USER");
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String jwt = jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(jwt));
-    }
-}
-
-// Update LoginRequest to use email
-class LoginRequest {
-    private String email;
-    private String password;
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-}
-
-class JwtResponse {
-    private final String token;
-
-    public JwtResponse(String token) {
-        this.token = token;
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            String email = loginRequest.email().trim().toLowerCase();
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, loginRequest.password()));
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String jwt = jwtUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new JwtResponse(jwt));
+        } catch (BadCredentialsException exception) {
+            return ResponseEntity.status(401).body("Invalid email or password");
+        }
     }
 
-    public String getToken() { return token; }
+    public record RegisterRequest(
+            @NotBlank(message = "Name is required")
+            @Size(max = 100, message = "Name is too long")
+            String name,
+            @NotBlank(message = "Email is required")
+            @Email(message = "Email must be valid")
+            String email,
+            @NotBlank(message = "Password is required")
+            @Size(min = 6, max = 100, message = "Password must contain 6 to 100 characters")
+            String password) {
+    }
+
+    public record LoginRequest(
+            @NotBlank(message = "Email is required")
+            @Email(message = "Email must be valid")
+            String email,
+            @NotBlank(message = "Password is required")
+            String password) {
+    }
+
+    public record JwtResponse(String token) {
+    }
+
 }

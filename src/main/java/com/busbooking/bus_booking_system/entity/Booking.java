@@ -26,5 +26,6 @@ public class Booking {
     private String status; // "HELD", "CONFIRMED", "CANCELLED", "EXPIRED"
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonManagedReference
     private List<Passenger> passengers;
 }

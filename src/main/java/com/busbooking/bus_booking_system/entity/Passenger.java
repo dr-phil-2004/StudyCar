@@ -15,5 +15,6 @@ public class Passenger {
 
     @ManyToOne
     @JoinColumn(name = "booking_id")
+    @com.fasterxml.jackson.annotation.JsonBackReference
     private Booking booking;
 }
