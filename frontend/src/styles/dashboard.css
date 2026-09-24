@@ -202,6 +202,55 @@
   flex-shrink: 0;
 }
 
+/* Bus stop list */
+.stop-list-sidebar {
+  padding: 0.85rem 1.25rem 0;
+  max-height: 245px;
+  overflow: hidden;
+}
+
+.stop-list-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.stop-list-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  background: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  border-radius: 10px;
+}
+
+.stop-list-icon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #0f766e;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.stop-list-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stop-list-info strong { font-size: 0.78rem; color: #134e4a; }
+.stop-list-info span, .stop-list-info small { font-size: 0.66rem; color: #475569; }
+.stop-list-info small { color: #0f766e; }
+
 /* Bus list */
 .bus-list-sidebar {
   flex: 1;
@@ -370,6 +419,18 @@
 }
 
 /* Leaflet custom markers */
+.custom-stop-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.stop-marker-pin {
+  filter: drop-shadow(0 3px 5px rgba(15, 118, 110, 0.3));
+  transition: transform 180ms ease;
+}
+
+.stop-marker-pin:hover { transform: translateY(-2px); }
+
 .custom-bus-marker {
   background: transparent !important;
   border: none !important;
@@ -443,6 +504,10 @@
 }
 
 /* Leaflet popups */
+.stop-popup h4 { margin: 0 0 0.65rem; color: #134e4a; font-size: 0.95rem; }
+.stop-popup-grid { display: grid; grid-template-columns: 1fr auto; gap: 0.35rem 1rem; font-size: 0.75rem; color: #475569; }
+.stop-popup-grid strong { color: #0f766e; text-align: right; }
+
 .leaflet-popup-content-wrapper {
   border-radius: 12px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
