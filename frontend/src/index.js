@@ -4,7 +4,8 @@ import App from './App';
 
 /* Global styles */
 import './index.css';
-import './App.css';   // ensure theme + UI styles are included
+import './App.css';
+import './styles/auth.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
