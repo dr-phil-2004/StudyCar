@@ -6,18 +6,28 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
   
-  // Coordonnées fictives de l'étudiant à Calavi pour le test
-  const studentLat = 6.4420;
-  const studentLng = 2.3510;
-
   const handleSearch = async () => {
     setLoading(true);
     try {
-      const data = await transitApi.getRecommendations(studentLat, studentLng, destination);
+      if (!navigator.geolocation) {
+        throw new Error('La géolocalisation est indisponible sur ce navigateur.');
+      }
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 30000,
+        });
+      });
+      const data = await transitApi.getRecommendations(
+        position.coords.latitude,
+        position.coords.longitude,
+        destination
+      );
       setRecommendations(data);
     } catch (error) {
       console.error(error);
-      alert("Impossible de charger les recommandations");
+      alert(error.message || "Impossible de charger les recommandations");
     } finally {
       setLoading(false);
     }
@@ -77,6 +87,9 @@ export default function StudentDashboard() {
             <div style={{ marginTop: '10px', fontSize: '14px', fontWeight: 'bold', color: '#0056b3' }}>
               Score d'adéquation : {rec.score}%
             </div>
+            <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#475569' }}>
+              {rec.justification}
+            </p>
           </div>
         ))}
       </div>

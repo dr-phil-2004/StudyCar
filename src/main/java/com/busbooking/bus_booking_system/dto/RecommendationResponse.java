@@ -14,4 +14,9 @@ public class RecommendationResponse {
     private int totalTravelTime;
     private double studentDistanceKm;
     private String recommendedStopName;
+    private double arrivalTimeScore;
+    private double capacityScore;
+    private double studentDistanceScore;
+    private double totalTravelTimeScore;
+    private String justification;
 }

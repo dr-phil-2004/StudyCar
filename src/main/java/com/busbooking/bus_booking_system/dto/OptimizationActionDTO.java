@@ -15,4 +15,7 @@ public class OptimizationActionDTO {
     private String actionType;      // ex: "AJOUT_BUS", "REDUCTION_FREQUENCE", "CREATION_ARRET"
     private String justification;   // Texte explicatif chiffré imposé par le sujet
     private double priorityScore;   // Score d'urgence basé sur le taux d'étudiants restés à quai
+    private String indicator;
+    private double indicatorValue;
+    private String indicatorUnit;
 }
