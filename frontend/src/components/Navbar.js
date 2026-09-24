@@ -37,6 +37,11 @@ const Navbar = () => {
             {token ? (
               <>
                 <li className="nav-item">
+                  <Link className="nav-link nav-link-modern" to="/dashboard">
+                    Dashboard
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link nav-link-modern" to="/buses">
                     Search Buses
                   </Link>

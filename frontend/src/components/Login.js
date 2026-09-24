@@ -52,7 +52,7 @@ function Login() {
 
       localStorage.setItem('token', token);
       setSuccess('Login successful! Redirecting...');
-      setTimeout(() => navigate('/buses'), 1000);
+      setTimeout(() => navigate('/dashboard'), 1000);
     } catch (err) {
       const errorMessage =
         err.response?.data?.error ||
