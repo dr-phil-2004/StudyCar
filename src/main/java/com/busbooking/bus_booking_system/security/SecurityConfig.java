@@ -1,6 +1,6 @@
 package com.busbooking.bus_booking_system.security;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             System.out.println("Authentication failed for request: " + request.getRequestURI());
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"); // Changed to 401
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                         })
                 );
 
