@@ -1,3 +1,4 @@
+/* global L */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +55,29 @@ function createBusIcon(color, busCode) {
   });
 }
 
+const DEFAULT_STOPS = [
+  { id: 'akpakpa', name: 'Akpakpa', latitude: 6.3708, longitude: 2.4567, waiting: 15, boarded: 8, alighted: 3, averageWait: 12 },
+  { id: 'ganhi', name: 'Ganhi', latitude: 6.3678, longitude: 2.4184, waiting: 9, boarded: 5, alighted: 2, averageWait: 9 },
+  { id: 'etoile-rouge', name: 'Étoile Rouge', latitude: 6.3702, longitude: 2.3957, waiting: 12, boarded: 7, alighted: 4, averageWait: 15 },
+  { id: 'uac', name: 'UAC', latitude: 6.4135, longitude: 2.3417, waiting: 6, boarded: 4, alighted: 6, averageWait: 7 },
+];
+
+function createStopIcon() {
+  return L.divIcon({
+    className: 'custom-stop-marker',
+    html: `<div class="stop-marker-pin" aria-label="Arrêt de bus">
+      <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M15 1C7.82 1 2 6.82 2 14c0 9.2 13 18 13 18s13-8.8 13-18C28 6.82 22.18 1 15 1Z" fill="#0f766e" stroke="white" stroke-width="2"/>
+        <rect x="9" y="9" width="12" height="10" rx="2" fill="white"/>
+        <rect x="11" y="11" width="3" height="3" fill="#0f766e"/><rect x="16" y="11" width="3" height="3" fill="#0f766e"/>
+        <circle cx="12" cy="21" r="1.5" fill="white"/><circle cx="18" cy="21" r="1.5" fill="white"/>
+      </svg>
+    </div>`,
+    iconSize: [30, 34],
+    iconAnchor: [15, 32],
+  });
+}
+
 function createUserIcon() {
   return L.divIcon({
     className: 'custom-user-marker',
@@ -78,6 +102,7 @@ function Dashboard() {
   const userMarkerRef = useRef(null);
   const accuracyCircleRef = useRef(null);
   const busMarkersRef = useRef({});
+  const stopMarkersRef = useRef({});
   const wsRef = useRef(null);
 
   const [buses, setBuses] = useState([]);
@@ -88,6 +113,28 @@ function Dashboard() {
   const [error, setError] = useState('');
   const [selectedBus, setSelectedBus] = useState(null);
   const [wsConnected, setWsConnected] = useState(false);
+
+  const stops = (buses.flatMap((bus) => bus.route?.stops || []).length > 0
+    ? buses.flatMap((bus) => bus.route?.stops || [])
+    : DEFAULT_STOPS
+  ).reduce((uniqueStops, stop) => {
+    const stopId = stop.id || stop.name;
+    if (!uniqueStops.some((item) => (item.id || item.name) === stopId)) uniqueStops.push(stop);
+    return uniqueStops;
+  }, []);
+
+  const stopMetrics = (stop) => {
+    const waiting = Number(stop.waiting ?? stop.waitingPassengers ?? stop.passengersWaiting ?? 0);
+    const boarded = Number(stop.boarded ?? stop.boarding ?? stop.passengersBoarded ?? 0);
+    const alighted = Number(stop.alighted ?? stop.alighting ?? stop.passengersAlighted ?? 0);
+    return {
+      waiting,
+      boarded,
+      alighted,
+      remaining: Math.max(0, waiting - boarded),
+      averageWait: Number(stop.averageWait ?? stop.averageWaitingTime ?? 0),
+    };
+  };
 
   const token = localStorage.getItem('token');
 
@@ -214,6 +261,40 @@ function Dashboard() {
       }
     };
   }, [token, navigate, fetchBuses, requestLocation, userLocation]);
+
+  useEffect(() => {
+    if (!mapInstanceRef.current || !window.L) return;
+
+    stops.forEach((stop) => {
+      if (!stop.latitude || !stop.longitude) return;
+      const metrics = stopMetrics(stop);
+      const popupContent = `<div class="stop-popup">
+        <h4>Arrêt ${stop.name}</h4>
+        <div class="stop-popup-grid">
+          <span>En attente</span><strong>${metrics.waiting}</strong>
+          <span>Montées</span><strong>${metrics.boarded}</strong>
+          <span>Descendues</span><strong>${metrics.alighted}</strong>
+          <span>Restent à quai</span><strong>${metrics.remaining}</strong>
+          <span>Attente moyenne</span><strong>${metrics.averageWait} min</strong>
+        </div>
+      </div>`;
+      const markerId = stop.id || stop.name;
+      if (stopMarkersRef.current[markerId]) {
+        stopMarkersRef.current[markerId].setLatLng([stop.latitude, stop.longitude]).setPopupContent(popupContent);
+      } else {
+        stopMarkersRef.current[markerId] = L.marker([stop.latitude, stop.longitude], { icon: createStopIcon(), keyboard: true })
+          .addTo(mapInstanceRef.current)
+          .bindPopup(popupContent);
+      }
+    });
+
+    Object.keys(stopMarkersRef.current).forEach((markerId) => {
+      if (!stops.some((stop) => (stop.id || stop.name) === markerId)) {
+        mapInstanceRef.current.removeLayer(stopMarkersRef.current[markerId]);
+        delete stopMarkersRef.current[markerId];
+      }
+    });
+  }, [stops]);
 
   useEffect(() => {
     if (!buses.length || !mapInstanceRef.current || !window.L) return;
@@ -408,6 +489,25 @@ function Dashboard() {
             <div className="legend-item">
               <span className="legend-dot" style={{ background: '#ef4444' }} />
               <span>Far (&gt; {DISTANCE_THRESHOLDS.medium} km)</span>
+            </div>
+          </div>
+
+          <div className="stop-list-sidebar">
+            <h4 className="bus-list-title">Arrêts ({stops.length})</h4>
+            <div className="stop-list-scroll">
+              {stops.map((stop) => {
+                const metrics = stopMetrics(stop);
+                return (
+                  <article className="stop-list-card" key={stop.id || stop.name}>
+                    <div className="stop-list-icon" aria-hidden="true">▣</div>
+                    <div className="stop-list-info">
+                      <strong>{stop.name}</strong>
+                      <span>{metrics.waiting} en attente · {metrics.remaining} à quai</span>
+                      <small>↑ {metrics.boarded} montées · ↓ {metrics.alighted} descendues · {metrics.averageWait} min moyen</small>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
 
