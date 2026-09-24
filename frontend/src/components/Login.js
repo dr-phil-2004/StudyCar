@@ -52,7 +52,14 @@ function Login() {
 
       localStorage.setItem('token', token);
       setSuccess('Login successful! Redirecting...');
-      setTimeout(() => navigate('/dashboard'), 1000);
+      let destination = '/dashboard';
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        if (payload.roles?.includes('ROLE_ADMIN')) destination = '/adminDashboard';
+      } catch {
+        // The protected routes still validate the token if its payload cannot be decoded here.
+      }
+      setTimeout(() => navigate(destination), 1000);
     } catch (err) {
       const errorMessage =
         err.response?.data?.error ||

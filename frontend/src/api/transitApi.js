@@ -3,7 +3,12 @@ const BASE_URL = 'http://localhost:8082/api';
 export const transitApi = {
   // Récupérer les recommandations pour un étudiant
   getRecommendations: async (lat, lng, destination) => {
-    const response = await fetch(`${BASE_URL}/recommendations?latitude=${lat}&longitude=${lng}&destination=${destination}`);
+    const params = new URLSearchParams({
+      latitude: lat,
+      longitude: lng,
+      destination,
+    });
+    const response = await fetch(`${BASE_URL}/recommendations?${params.toString()}`);
     if (!response.ok) throw new Error('Erreur lors de la récupération des recommandations');
     return response.json();
   },

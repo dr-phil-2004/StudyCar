@@ -7,6 +7,7 @@ import './App.css';
 const Login = lazy(() => import('./components/Login'));
 const Register = lazy(() => import('./components/Register'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
+const AdminDashboard = lazy(() => import('./pages/adminDashboard'));
 const Booking = lazy(() => import('./components/Booking'));
 const BusList = lazy(() => import('./components/BusList'));
 const Profile = lazy(() => import('./components/Profile'));
@@ -56,6 +57,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/adminDashboard" element={<AdminDashboard />} />
             <Route path="/buses" element={<BusList />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/profile" element={<Profile />} />

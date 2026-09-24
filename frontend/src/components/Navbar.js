@@ -4,6 +4,15 @@ import { Link, useNavigate } from 'react-router-dom';
 const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  let isAdmin = false;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      isAdmin = payload.roles?.includes('ROLE_ADMIN');
+    } catch {
+      isAdmin = false;
+    }
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -37,8 +46,8 @@ const Navbar = () => {
             {token ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link nav-link-modern" to="/dashboard">
-                    Dashboard
+                  <Link className="nav-link nav-link-modern" to={isAdmin ? '/adminDashboard' : '/dashboard'}>
+                    {isAdmin ? 'Admin Dashboard' : 'Dashboard'}
                   </Link>
                 </li>
                 <li className="nav-item">
